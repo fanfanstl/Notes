@@ -1,0 +1,65 @@
+为命令起别名：
+alias c="clear"
+unalias c
+永久生效：
+vim .bashrc
+添加:alias CLEAR='clear'
+
+统计命令：
+wc -l < ls
+
+重定向：
+正常重定向：
+>:覆盖之前文件内容
+>>:追加文件内容
+
+错误重定向：
+2>:同上
+2>>:同上
+
+2>&1：不管是否正确都重定向
+
+定义变量：
+var=123
+echo ${var}3.0
+
+
+
+
+"":$保留特殊功能
+'':$当成字符处理
+``：相当于python中的os.sys,写在里面的命令可执行，如`ls -l`
+
+和bash进行互动：
+#！/bin/bash
+read -p "input a number:" -t 30 num1
+-p:输入提示内容 
+-t：延迟 
+num1：变量
+
+
+添加环境变量：
+export A=/usr/local/nginx/sbin:$PATH
+echo $A
+unset $A:去除环境变量
+
+系统环境变量：
+	全局配置文件：
+		/etc/profile
+		/etc/bashrc
+	用户配置文件：
+		~/.bashrc
+		~/.bash_profile
+
+
+
+
+
+
+
+
+
+
+
+
+

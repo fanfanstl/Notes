@@ -1,0 +1,217 @@
+
+一、操作数据库：
+    创建数据库：
+        格式：use 数据库名
+        注意：如果数据库不存在，则创建数据库，否则切断到指定数据库
+    查看所有数据库：
+        show dbs
+        注意：如果刚刚创建的数据库不在列表内，并不代表没有创建，而是因为数据库中没有数据而不显示。如果要显示需要给数据库中插入一些数据
+
+    查看当前使用的数据库：
+        db 或者 db.getName()
+
+    删除数据库：
+        说明：当前正在使用哪个数据库则删除哪个数据库，db代表当前正在使用的数据库
+        db.dropDatebase()
+
+    断开链接：
+        exit
+
+    查看API：
+        help
+    
+
+
+二、操作集合
+    查看当前数据库下的所有集合：
+        show collections
+
+    创建集合：
+        1、db.createCollection("集合名称")
+        2、db.集合名称.insert(文档)
+        区别：第一种方法创建一个空集合，第二种方法创建一个空集合后并向集合中添加了一个文档
+
+    删除集合：
+        db.集合名称.dorp()
+
+三、操作文档
+    增
+        1、insert()
+            db.集合名称.insert(文档)
+                添加一个：db.student.insert({"name":"tom1","age":18})
+                添加多个：db.student.insert([{"name":"tom2","age":22},{"name":"tom3","age":25}])
+        2、save()
+            db.集合名称.save(文档)
+                db.student.save({"name":"tom5","age":30})
+                注意：如果不指定_id字段save()方法类似于insert()方法，如果指定_id字段，则会更新该_id字段的数据库
+                    db.student.save({"_id":ObjectId("5b864efc8ad03c4c28e530ea"),"name":"tom2","age":10})
+
+    删
+        remove()
+            db.集合名称.remove(
+                <query>,
+                {
+                    justOne:<boolean>,
+                    writeConcern:<document>
+                }
+            )
+            参数说明：
+                query：可选，删除的文档的条件
+                justOne：可选，如果为ture，则只删除一个文档
+                writeConcern：可选，抛出异常的级别
+
+            示例： 
+                db.student.remove({"_id":ObjectId("5b864efc8ad03c4c28e530ea")})
+    改
+        1、update()：用于更新已经存在的文档
+            db.集合名称.update(
+                <query>,
+                <update>,
+                {
+                    upset:<boolean>,
+                    multi:<boolean>,
+                    writeConcern:<document>
+                }
+            )
+
+
+            参数说明：
+                query：update的查询条件，类似mysql中update后面的where后面的条件语句
+                update：一些跟新的操作，$set表示设置、$inc表示叠加
+                upset：可选参数，如果不存在update的记录，是否插入该数据，true为插入，默认为false不插入
+                multi：可选，默认为false，只更新找到的第一条数据，如果为true，则更新所有匹配的文档
+                writeConcern：可选，抛出异常的级别
+            
+            
+
+            示例：
+            db.student.update({name:"tom3"},{$set:{age:8}})
+
+            db.student.update({name:"tom3"},{$set:{age:7}},{multi:true})
+
+            db.student.update({name:"tom1"},{$inc:{age:2}})
+
+
+
+        2、save()：通过传入的文档替换已有的文档
+            db.集合名称.save(
+                <document>,
+                {
+                    writeConcern:<document>
+                }
+            )
+            参数说明：
+                document：文档数据
+                writeConcern：可选，抛出异常的级别
+
+
+
+    查
+        查询文档：
+            find()
+                db.集合名称.find()
+                    查询集合中的所有文档数据
+                    db.student.find()
+
+                db.集合名称.find(
+                    {
+                        queryWhere
+                    },
+                    {
+                        key1:1,
+                        key2:1,
+                        ……
+                    }
+                )
+                    参数说明：
+                        queryWhere：查询条件
+                        key：要显示字段，1表示显示
+                    示例：
+                        db.student.find({name:"tom3"})
+                        db.student.find({name:"tom3"},{age:1})
+
+            pretty()
+                以格式化的方式来显示所有文档
+                db.student.find().pretty()
+
+            findOne()
+                匹配结构的第一条数据
+                db.student.findOne({name:"tom3"})
+
+
+
+        db.student.insert([{"name":"tom6","age":26},{"name":"tom7","age":35},{"name":"tom8","age":40},{"name":"tom9","age":44},{"name":"tom10","age":65},{"name":"tom11","age":15},{"name":"tom12","age":32},{"name":"tom13","age":46},{"name":"tom14","age":79},{"name":"tom15","age":66},{"name":"tom16","age":8}])
+        查询条件操作符：
+            
+            >      $gt
+            >=     $gte
+            <      $lt
+            <=     $lte
+            db.集合名称.find({key:{操作符:值}})
+            db.student.find({age:{$gt:30}})
+
+            联合使用 >= 与 <=
+            db.student.find({age:{$gte:30, $lte:50}})
+
+            ==   
+            db.集合名称.find({key:值})
+
+            使用_id进行查询
+            db.集合名称.find({"_id":ObjectId("id值")})
+
+            查询某个结果集的数据条数
+            db.student.find({age:{$gt:30}}).count()
+
+            查询某个字段中是否包含另一个值
+            db.集合名称.find({key:/value/})
+            db.student.find({name:/aaa/})
+
+            查询某个字段是否是以另一个值开头
+            db.集合名称.find({key:/^value/})
+            db.student.find({name:/^tom/})
+
+        查询条件and和or：
+            and：
+                find()中出入多个键，每个键以逗号分隔
+                db.student.find({name:"tom3",age:7})
+            or：
+                db.集合名称.find(
+                    {
+                        $or:[
+                            {key1:value1},
+                            {key2:value2},
+                            ……
+                        ]
+                    }  
+                )
+                db.student.find({$or:[{age:20},{age:30}]})
+                db.student.find({$or:[{age:{$lte:20}},{age:{$gte:30}}]})
+
+
+            and与or联合使用：
+                db.集合名称.find({
+                    key1:value1,
+                    key2:value,
+                    $or:[
+                        {key1:value1},
+                        {key2:value2},
+                    ]
+                })
+
+                需求：年龄小于等于20或者大于等于30且名字以tom开头
+                db.student.find({name:/^tom/,$or:[{age:{$lte:20}},{age:{$gte:30}}]})
+
+        limit和skip：
+            limit()：读取指定数量的记录
+                db.student.find().limit(5)
+
+            skip()：跳过指定数量的数据
+                db.student.find().skip(5)
+
+            分页：
+                db.student.find().skip(5).limit(5)
+
+        排序：
+            db.集合名称.find().sort({key:1})
+            参数key：排序的字段，1表示升序排序，-1表示降序
+            db.student.find().sort({age:1})
