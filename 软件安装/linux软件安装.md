@@ -38,3 +38,36 @@ sudo apt-get update
 sudo apt-get install typora
 ```
 
+## shadowsockets客户端安装配置
+
+```bash
+参考：https://iaside.com/archives/269
+
+安装：
+apt-get install python-pip
+pip install shadowsocks
+
+# 配置
+打开ubuntu中的设置->网络->网络代理->配置http代理和socks主机同为127.0.0.1 port：1080->应用到整个系统
+
+创建/etc/shadowsockets.json配置文件：
+{
+    "server":"67.218.141.91",
+    "server_port":443,
+    "local_address":"127.0.0.1",
+    "local_port":1080,
+    "password":"663b11!!",
+    "timeout":300,
+    "method":"aes-256-cfb",
+    "fast_open": true
+}
+
+# 启动服务
+前台启动：
+sslocal -c /etc/shadowsocks.json 
+后台启动：
+启动：sslocal -c /etc/shadowsocks.json -d start
+停止: sslocal -c /etc/shadowsocks.json -d stop
+
+```
+
