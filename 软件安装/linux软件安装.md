@@ -71,3 +71,17 @@ sslocal -c /etc/shadowsocks.json
 
 ```
 
+## postman安装
+
+```
+Ubuntu 16.04 安装Postman：
+
+1、官网下载地址：https://www.getpostman.com/根据机器类型选择64位下载。
+
+2、进入下载目录，解压该文件sudo tar -xzf postman.tar.gz -C /opt/
+
+3、进入解压目录，执行./Postman,软件就运行了，到此软件就安装完成了，但是这样每次都要进入这个目录，且启动器没有该应用；
+
+4、创建全局变量，也就是在任何地方都可以执行postman，不用去到安装目录，执行
+```
+
